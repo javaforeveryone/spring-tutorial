@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<rabbit:connection-factory host="" port=""
+		username="" password="" id="connectionFactory" />
+	<rabbit:admin connection-factory="connectionFactory" />
+	<rabbit:queue name="spittle.alert.queue.1" id="queue1"  />
+	<rabbit:queue name="spittle.alert.queue.2" id="queue2" />
+	<rabbit:queue name="spittle.alert.queue.3" id="queue3" />
+
+	<rabbit:fanout-exchange name="fan-out" >
+		<rabbit:bindings>
+			<rabbit:binding queue="queue1" />
+			<rabbit:binding queue="queue2" />
+			<rabbit:binding queue="queue3"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:fanout-exchange>
+	
+	<rabbit:template id="rabit" connection-factory="connectionFactory" exchange="spittle.alert.exchange" routing-key="spittle.alert.queue" queue="spittle.alert.queue.1"></rabbit:template>
+
+</beans>
